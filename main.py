@@ -4,7 +4,7 @@ from voltagedivider.voltage_divider import VoltageDivider
 
 def exercise_1():
     voltage_divider = VoltageDivider()
-    voltage_divider.a()
+    voltage_divider.voltage_divider()
 
 
 def exercise_2():
