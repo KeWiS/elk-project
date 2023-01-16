@@ -8,8 +8,8 @@ def exercise_1():
 
 
 def exercise_2():
-    bridgerectifier = BridgeRectifier()
-    bridgerectifier.a()
+    bridge_rectifier = BridgeRectifier()
+    bridge_rectifier.a()
 
 
 if __name__ == '__main__':
