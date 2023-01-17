@@ -33,23 +33,27 @@ class BridgeRectifier:
         self.resistance = float(input("Resistance (Ohm): "))
 
     def __calculate_capacitor_value(self):
-        return (self.input_voltage * self.TARGET_RIPPLE_VALUE) / (2 * self.frequency * self.resistance)
+        return (self.input_voltage) / (self.TARGET_RIPPLE_VALUE * 2 * self.frequency * self.resistance)
 
     def __show_transient_analysis_chart(self):
-        # V cos(2 pi f t)
         x_axis = []
         y_ac_axis = []
         y_dc_axis = []
+        # Creating chart for AC
+        self.lowest_difference_for_graphs = self.input_voltage
         for i in range(0, 400):
-            # Creating chart for AC
             time = self.__calculate_x_axis_for_ac(i)
             x_axis.insert(i, time)
             voltage_ac = self.__calculate_y_axis_for_ac(time)
             y_ac_axis.insert(i, voltage_ac)
 
-            # Creating chart for output DC
-            voltage_dc = self.__calculate_y_axis_for_dc(time, voltage_ac)
-            y_dc_axis.insert(i, voltage_dc)
+            self.__calculate_y_axis_for_ac_dc_comparision(time, voltage_ac)
+
+        # Creating chart for output DC
+        for i in range(0, 400):
+            time = self.__calculate_x_axis_for_ac(i)
+
+            y_dc_axis.insert(i, self.__calculate_y_axis_for_dc(time, self.module_theta_for_lowest_difference))
 
         self.__set_chart_properties(x_axis, y_ac_axis, y_dc_axis)
 
@@ -62,26 +66,38 @@ class BridgeRectifier:
         return self.input_voltage / 2 * (
             math.cos(2 * self.frequency * math.pi * time - math.pi)) + self.input_voltage / 2
 
-    def __calculate_y_axis_for_dc(self, time, voltage_ac):
+    def __calculate_y_axis_for_ac_dc_comparision(self, time, voltage_ac):
         theta = 2 * self.frequency * math.pi * time
-        conditional_theta = math.fmod(theta, 2 * math.pi)
 
-        if (0 <= conditional_theta < math.pi / 2):
-            return self.__calculate_middle_y_axi_value(theta)
+        if (theta < math.pi):
+            modulo_theta = math.fmod(theta, math.pi)
 
-        return self.__calculate_extreme_y_axi_value(theta)
-        # if ((0 <= conditional_theta < self.input_voltage - self.TARGET_RIPPLE_VALUE) or (
-        #         math.pi / 2 <= conditional_theta < math.pi * 2)):
-        #     return self.__calculate_extreme_y_axi_value(theta)
-        # elif (self.input_voltage - self.TARGET_RIPPLE_VALUE <= conditional_theta < math.pi / 2):
-        #     return self.__calculate_middle_y_axi_value(theta)
+            voltage_dc = self.__calculate_y_axi_value(modulo_theta)
+            difference = abs(voltage_dc - voltage_ac)
 
-    def __calculate_extreme_y_axi_value(self, theta):
+            if (difference < self.lowest_difference_for_graphs):
+                self.module_theta_for_lowest_difference = modulo_theta
+                self.lowest_difference_for_graphs = difference
+
+    def __calculate_y_axis_for_dc(self, time, theta1):
+        theta = 2 * self.frequency * math.pi * time
+        modulo_theta = math.fmod(theta, math.pi)
+
+        if (theta < math.pi):
+            return self.__calculate_y_axis_for_ac(time)
+        elif (modulo_theta < theta1):
+            return self.__calculate_y_axi_value(modulo_theta)
+
+        return self.__calculate_sin_y_axi_value(time)
+
+    def __calculate_y_axi_value(self, modulo_theta):
         return self.input_voltage * math.exp(
-            ((math.pi / 2) - theta) / (2 * self.frequency * math.pi * self.resistance * self.capacitor_value))
+            (math.pi / 2 - modulo_theta) / (
+                    2 * self.frequency * math.pi * self.resistance * self.capacitor_value)) - self.TARGET_RIPPLE_VALUE / 2
 
-    def __calculate_middle_y_axi_value(self, theta):
-        return self.input_voltage * math.sin(theta)
+    def __calculate_sin_y_axi_value(self, time):
+        return self.input_voltage / 2 * (
+            abs(math.cos(2 * self.frequency * math.pi * time - math.pi))) + self.input_voltage / 2
 
     @staticmethod
     def __set_chart_properties(x_axis, y_ac_axis, y_dc_axis):
@@ -89,7 +105,6 @@ class BridgeRectifier:
         plot.ylabel("Voltage")
         plot.xlabel("Time")
 
-        # plot.plot(x_axis, y_dc_axis)
         plot.plot(x_axis, y_ac_axis, x_axis, y_dc_axis)
         plot.grid(True, which = 'both')
         plot.axhline(color = 'k')
