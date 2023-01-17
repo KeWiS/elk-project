@@ -19,6 +19,6 @@ def exercise_2():
 
 
 if __name__ == '__main__':
-    #exercise_1()
-    jump_to_next_exercise()
+    # exercise_1()
+    # jump_to_next_exercise()
     exercise_2()

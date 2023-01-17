@@ -1,5 +1,6 @@
+import math
 import os
-import numpy as np
+
 import matplotlib.pyplot as plot
 
 
@@ -35,26 +36,23 @@ class BridgeRectifier:
         return (self.input_voltage * self.TARGET_RIPPLE_VALUE) / (2 * self.frequency * self.resistance)
 
     def __show_transient_analysis_chart(self):
+        # V cos(2 pi f t)
+        x = []
+        y = []
+        for i in range(0, 400):
+            time = i * (1 / self.frequency / 100)
+            x.insert(i, time)
+            y.insert(i,
+                     self.input_voltage / 2 * (math.cos(2 * self.frequency * math.pi * time - math.pi)) + self.input_voltage / 2)
+
+        print(x)
+        print(y)
+
         plot.title("Transient Analysis")
         plot.ylabel("Voltage")
         plot.xlabel("Time")
 
-        x_axis = self.__create_chart_x_axis()
-        y_axis = self.__create_chart_y_axis(x_axis)
-
-        plot.plot(x_axis, y_axis)
+        plot.plot(x, y)
         plot.grid(True, which = 'both')
-        plot.axhline(y = self.input_voltage, color = 'k')
+        plot.axhline(color = 'k')
         plot.show()
-
-    def __create_chart_x_axis(self):
-        return np.arange(0, self.__calculate_arange_end_value(), self.__calculate_arange_step())
-
-    def __calculate_arange_end_value(self):
-        return 1 / self.frequency * 3
-
-    def __calculate_arange_step(self):
-        return 1 / self.frequency / 10
-
-    def __create_chart_y_axis(self, x_axis):
-        return np.sin(x_axis)
