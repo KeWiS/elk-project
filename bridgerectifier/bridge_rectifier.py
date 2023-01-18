@@ -21,6 +21,10 @@ class BridgeRectifier:
         # Create Transient Analysis chart
         self.__show_transient_analysis_chart()
 
+        # Waiting for key to exit
+        if (input("\nPress any key to exit")):
+            exit()
+
     @staticmethod
     def __show_image():
         path = os.getcwd()
