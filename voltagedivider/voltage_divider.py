@@ -1,6 +1,6 @@
 class VoltageDivider:
     def voltage_divider(self):
-        print("voltage divider")
+        print("***   Voltage Divider   ***")
         u_in = int(input("Please provide input voltage: "))
         u_out = float(input("Please provide output voltage: "))
         resistor_value = int(input("Please provide resistance: "))
@@ -16,4 +16,4 @@ class VoltageDivider:
             case _:
                 print("Invalid data")
 
-        print("The resistance of " + r_type + " resistor is " + str(r_resulting) + " ohm(s).")
+        print("\nThe resistance of " + r_type + " resistor is " + str(r_resulting) + " ohm(s).")

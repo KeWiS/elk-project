@@ -8,6 +8,7 @@ class BridgeRectifier:
     TARGET_RIPPLE_VALUE = 1
 
     def simulate_bridge(self):
+        print("***   Bridge Rectifier   ***")
         # Showing scheme image
         self.__show_image()
 
@@ -16,7 +17,7 @@ class BridgeRectifier:
 
         # Calculating capacitor value
         self.capacitor_value = self.__calculate_capacitor_value()
-        print("Value of the capacitor (C1) is: " + str(self.capacitor_value))
+        print("\nValue of the capacitor (C1) is: " + str(self.capacitor_value))
 
         # Create Transient Analysis chart
         self.__show_transient_analysis_chart()
