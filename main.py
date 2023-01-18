@@ -8,7 +8,7 @@ def exercise_1():
 
 
 def jump_to_next_exercise():
-    print("Do you want to go to another exercise?\n\"y\" for yes, to exit any other key")
+    print("\n\nDo you want to go to another exercise?\n\"y\" for yes, to exit any other key")
     if (input() != "y"):
         exit()
 
@@ -19,6 +19,6 @@ def exercise_2():
 
 
 if __name__ == '__main__':
-    # exercise_1()
-    # jump_to_next_exercise()
+    exercise_1()
+    jump_to_next_exercise()
     exercise_2()

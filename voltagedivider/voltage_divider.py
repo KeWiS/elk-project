@@ -1,18 +1,19 @@
 class VoltageDivider:
     def voltage_divider(self):
         print("voltage divider")
-        Uin = int(input("Please provide input voltage: "))
-        Uout = int(input("Please provide output voltage: "))
+        u_in = int(input("Please provide input voltage: "))
+        u_out = float(input("Please provide output voltage: "))
         resistor_value = int(input("Please provide resistance: "))
         resistor_type = input("Choose resistor to calculate: R1 or R2? ")
-        self.__calculate_resistance(Uin, Uout, resistor_value, resistor_type)
+        self.__calculate_resistance(u_in, u_out, resistor_value, resistor_type)
 
-    def __calculate_resistance(self, Uin, Uout, R, Rtype):
-        match Rtype:
+    def __calculate_resistance(self, u_in, u_out, R, r_type):
+        match r_type:
             case "R1":
-                R_resulting = (Uin * R)/Uout - R
+                r_resulting = (u_in * R) / u_out - R
             case "R2":
-                R_resulting = (Uout * R)/((Uout - Uin)*(-1))
+                r_resulting = (u_out * R) / ((u_out - u_in) * (-1))
             case _:
                 print("Invalid data")
-        print("The resistance of " + Rtype + " resistor is " + str(R_resulting) + " ohm(s).")
+
+        print("The resistance of " + r_type + " resistor is " + str(r_resulting) + " ohm(s).")
