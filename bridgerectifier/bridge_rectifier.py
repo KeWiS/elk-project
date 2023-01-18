@@ -41,7 +41,7 @@ class BridgeRectifier:
         y_dc_axis = []
         # Creating chart for AC
         self.lowest_difference_for_graphs = self.input_voltage
-        for i in range(0, 400):
+        for i in range(0, 100000):
             time = self.__calculate_x_axis_for_ac(i)
             x_axis.insert(i, time)
             voltage_ac = self.__calculate_y_axis_for_ac(time)
@@ -50,17 +50,20 @@ class BridgeRectifier:
             self.__calculate_y_axis_for_ac_dc_comparision(time, voltage_ac)
 
         # Creating chart for output DC
-        for i in range(0, 400):
+        for i in range(0, 100000):
             time = self.__calculate_x_axis_for_ac(i)
 
-            y_dc_axis.insert(i, self.__calculate_y_axis_for_dc(time, self.module_theta_for_lowest_difference))
+            voltage_dc = self.__calculate_y_axis_for_dc(time, self.module_theta_for_lowest_difference)
+            if (voltage_dc > self.input_voltage):
+                voltage_dc = self.input_voltage
+            y_dc_axis.insert(i, voltage_dc)
 
         self.__set_chart_properties(x_axis, y_ac_axis, y_dc_axis)
 
         plot.show()
 
     def __calculate_x_axis_for_ac(self, iteration):
-        return iteration * (1 / self.frequency / 100)
+        return iteration * (1 / self.frequency / 25000)
 
     def __calculate_y_axis_for_ac(self, time):
         return self.input_voltage / 2 * (
